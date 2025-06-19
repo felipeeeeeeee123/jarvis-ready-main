@@ -2,7 +2,7 @@ import csv
 import os
 import random
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 from backend.features.ai_brain import AIBrain
 from backend.features import web_search
@@ -43,13 +43,14 @@ TEMPLATES = [
 LOG_PATH = "autotrain_log.csv"
 
 
-def init_log(path: str) -> csv.writer:
+def init_log(path: str) -> tuple[csv.writer, any]:
     exists = os.path.exists(path)
     f = open(path, "a", newline="", encoding="utf-8")
     writer = csv.writer(f)
     if not exists:
         writer.writerow(["timestamp", "question", "answer", "source"])
-    return writer
+        f.flush()
+    return writer, f
 
 
 def generate_question(asked: set[str]) -> str:
@@ -70,10 +71,18 @@ def shorten(text: str, limit: int = 80) -> str:
     return text if len(text) <= limit else text[:limit] + "..."
 
 
+def is_good_answer(text: str, min_tokens: int = 5) -> bool:
+    if not text:
+        return False
+    if text.startswith("[No answer"):
+        return False
+    return len(text.split()) >= min_tokens
+
+
 def main() -> None:
     brain = AIBrain()
     asked_questions: set[str] = set()
-    writer = init_log(LOG_PATH)
+    writer, log_f = init_log(LOG_PATH)
     counter = 0
     try:
         while True:
@@ -87,15 +96,19 @@ def main() -> None:
                 continue
             source = getattr(web_search, "last_used_source", "unknown")
             print(f"[{counter}] {question} -> {shorten(answer)}")
-            writer.writerow([
-                datetime.utcnow().isoformat(),
-                question,
-                answer,
-                source,
-            ])
+            if is_good_answer(answer):
+                writer.writerow([
+                    datetime.now(timezone.utc).isoformat(),
+                    question,
+                    answer,
+                    source,
+                ])
+                log_f.flush()
             time.sleep(random.uniform(1, 2))
     except KeyboardInterrupt:
         print("Autotrain interrupted by user.")
+
+    log_f.close()
 
 
 if __name__ == "__main__":
