@@ -1,6 +1,7 @@
+import re
 import requests
 from backend.utils.memory import MemoryManager
-from backend.features.web_search import web_search
+from backend.features.web_search import web_search, _extract_keywords, _contains_keyword
 from backend.features.knowledge import KnowledgeBase
 
 class AIBrain:
@@ -11,14 +12,19 @@ class AIBrain:
 
     def ask(self, prompt: str) -> str:
         self.memory.memory["last_prompt"] = prompt
+        keywords = _extract_keywords(prompt)
+        source = None
 
         facts: list[str] = []
         learned = False
         try:
             search_text = web_search(prompt)
-            facts = [line.strip() for line in search_text.splitlines() if line.strip()][:3]
+            source = getattr(web_search, "last_used_source", None)
+            raw_lines = [line.strip() for line in search_text.splitlines() if line.strip()]
+            # ignore placeholder lines
+            facts = [l for l in raw_lines if not l.startswith('[')]
             if facts:
-                if self.knowledge.add_facts(prompt, facts):
+                if self.knowledge.add_facts(prompt, facts[:3], source=source):
                     learned = True
         except Exception:
             facts = []  # offline or search failed
@@ -56,14 +62,28 @@ class AIBrain:
             else:
                 answer = "[No answer available]"
 
+        # Determine if the answer is valid and on-topic
+        invalid_markers = [
+            "[No answer available]",
+            "[Ollama fallback",
+            "[Web search failed",
+            "[No relevant news found]",
+            "[No web access",
+        ]
+        is_valid = not any(m in answer for m in invalid_markers)
+        if is_valid:
+            is_valid = _contains_keyword(answer, keywords)
+
         # Persist answer
         self.memory.memory["last_answer"] = answer
         self.memory.memory.setdefault("knowledge", [])
         self.memory.memory["knowledge"].append({"prompt": prompt, "answer": answer})
         self.memory.save()
 
-        if self.knowledge.add_qa(prompt, answer):
-            learned = True
+        if is_valid:
+            qa_source = source or "ollama"
+            if self.knowledge.add_qa(prompt, answer, source=qa_source):
+                learned = True
         self.knowledge.deduplicate()
 
         if learned:

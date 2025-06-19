@@ -1,11 +1,35 @@
+import re
 import requests
 from bs4 import BeautifulSoup
-from typing import Optional
+
+# Track which source successfully provided results
+last_used_source: str | None = None
+
+# Very small list of stopwords for naive keyword filtering
+_STOPWORDS = {
+    "the", "is", "a", "an", "and", "or", "of", "to", "in", "on",
+    "for", "if", "are", "as", "with", "was", "were", "by", "at", "be",
+    "this", "that", "it", "from", "did"
+}
+
+def _extract_keywords(text: str) -> list[str]:
+    words = re.findall(r"\b\w+\b", text.lower())
+    return [w for w in words if len(w) > 2 and w not in _STOPWORDS]
+
+def _contains_keyword(snippet: str, keywords: list[str]) -> bool:
+    snippet_l = snippet.lower()
+    return any(k in snippet_l for k in keywords)
 
 def web_search(query: str) -> str:
-    """Return relevant search snippets for a query using DuckDuckGo, with fallback to Bing or local Ollama."""
+    """Return relevant search snippets for a query using DuckDuckGo, with
+    fallback to Bing or local Ollama. Results that don't contain any of the
+    query keywords are discarded."""
+
+    global last_used_source
+    last_used_source = None
 
     headers = {"User-Agent": "Mozilla/5.0"}
+    keywords = _extract_keywords(query)
 
     # 1. DuckDuckGo Primary Search
     try:
@@ -15,8 +39,9 @@ def web_search(query: str) -> str:
             headers=headers,
             timeout=5
         )
+        res.raise_for_status()
         soup = BeautifulSoup(res.text, "html.parser")
-        results = soup.find_all("div", class_="result", limit=3)
+        results = soup.find_all("div", class_="result", limit=5)
         snippets: list[str] = []
 
         for r in results:
@@ -32,10 +57,14 @@ def web_search(query: str) -> str:
             if snippet and snippet.get_text():
                 text_parts.append(snippet.get_text(" ", strip=True))
             if text_parts:
-                snippets.append(" - ".join(text_parts))
+                combined = " - ".join(text_parts)
+                if not keywords or _contains_keyword(combined, keywords):
+                    print(f"[DuckDuckGo snippet] {combined}")
+                    snippets.append(combined)
 
         if snippets:
-            return "\n".join(snippets)
+            last_used_source = "duckduckgo"
+            return "\n".join(snippets[:3])
 
     except Exception as e:
         print(f"[DuckDuckGo Error] {e}")
@@ -47,8 +76,9 @@ def web_search(query: str) -> str:
             headers=headers,
             timeout=5
         )
+        res.raise_for_status()
         soup = BeautifulSoup(res.text, "html.parser")
-        results = soup.find_all("li", class_="b_algo", limit=3)
+        results = soup.find_all("li", class_="b_algo", limit=5)
         links: list[str] = []
 
         for r in results:
@@ -60,10 +90,14 @@ def web_search(query: str) -> str:
             if snippet and snippet.get_text():
                 text_parts.append(snippet.get_text(" ", strip=True))
             if text_parts:
-                links.append(" - ".join(text_parts))
+                combined = " - ".join(text_parts)
+                if not keywords or _contains_keyword(combined, keywords):
+                    print(f"[Bing snippet] {combined}")
+                    links.append(combined)
 
         if links:
-            return "\n".join(links)
+            last_used_source = "bing"
+            return "\n".join(links[:3])
 
     except Exception as e:
         print(f"[Bing Error] {e}")
@@ -74,12 +108,20 @@ def web_search(query: str) -> str:
             "http://localhost:11434/api/generate",
             json={
                 "model": "mistral",
-                "prompt": f"Search the web for: {query}",
+                "prompt": query,
                 "stream": False
             },
             timeout=10
         )
-        return res.json().get("response", "[Ollama fallback: No response]")
-
+        text = res.json().get("response", "").strip()
+        if not text:
+            raise ValueError("Empty response from Ollama")
+        last_used_source = "ollama"
+        if keywords and not _contains_keyword(text, keywords):
+            return f"[No web access \u2013 Ollama fallback] {text}"
+        return f"[No web access \u2013 Ollama fallback] {text}"
     except Exception as e:
-        return f"[Web search failed: {e}]"
+        last_used_source = "ollama"
+        print(f"[Ollama Error] {e}")
+        return "[No web access \u2013 Ollama fallback]"
+

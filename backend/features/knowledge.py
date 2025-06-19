@@ -28,7 +28,7 @@ class KnowledgeBase:
         with open(self.path, 'w') as f:
             json.dump(self.data, f, indent=4)
 
-    def add_facts(self, topic: str, facts: List[str]) -> bool:
+    def add_facts(self, topic: str, facts: List[str], source: str | None = None) -> bool:
         """Store new facts for a topic with timestamp.
 
         Returns True if any new fact was added."""
@@ -41,17 +41,20 @@ class KnowledgeBase:
             key = (topic.strip().lower(), fact.strip().lower())
             if any(key == (f.get("topic", "").lower(), f.get("fact", "").lower()) for f in self.data["facts"]):
                 continue
-            self.data["facts"].append({
+            entry = {
                 "topic": topic,
                 "fact": fact.strip(),
                 "timestamp": ts
-            })
+            }
+            if source:
+                entry["source"] = source
+            self.data["facts"].append(entry)
             learned = True
         if learned:
             self.save()
         return learned
 
-    def add_qa(self, question: str, answer: str) -> bool:
+    def add_qa(self, question: str, answer: str, source: str | None = None) -> bool:
         """Store a new question/answer pair.
 
         Returns True if it was a new entry."""
@@ -61,11 +64,14 @@ class KnowledgeBase:
         for qa in self.data["qa"]:
             if qa.get("question", "").strip().lower() == normalized:
                 return False
-        self.data["qa"].append({
+        entry = {
             "question": question.strip(),
             "answer": answer.strip(),
             "timestamp": ts
-        })
+        }
+        if source:
+            entry["source"] = source
+        self.data["qa"].append(entry)
         self.save()
         return True
 
