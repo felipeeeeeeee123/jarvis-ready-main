@@ -1,7 +1,12 @@
 import re
 import requests
 from backend.utils.memory import MemoryManager
-from backend.features.web_search import web_search, _extract_keywords, _contains_keyword
+from backend.features.web_search import (
+    web_search,
+    _extract_keywords,
+    _contains_keyword,
+    _keyword_overlap,
+)
 from backend.features.knowledge import KnowledgeBase
 
 class AIBrain:
@@ -21,8 +26,9 @@ class AIBrain:
             search_text = web_search(prompt)
             source = getattr(web_search, "last_used_source", None)
             raw_lines = [line.strip() for line in search_text.splitlines() if line.strip()]
-            # ignore placeholder lines
-            facts = [l for l in raw_lines if not l.startswith('[')]
+            # ignore placeholder lines and filter for relevance
+            all_facts = [l for l in raw_lines if not l.startswith('[')]
+            facts = [f for f in all_facts if _keyword_overlap(f, keywords) >= 0.3]
             if facts:
                 if self.knowledge.add_facts(prompt, facts[:3], source=source):
                     learned = True

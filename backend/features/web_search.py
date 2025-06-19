@@ -1,4 +1,6 @@
 import re
+from urllib.parse import urlparse
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -20,10 +22,33 @@ def _contains_keyword(snippet: str, keywords: list[str]) -> bool:
     snippet_l = snippet.lower()
     return any(k in snippet_l for k in keywords)
 
+def _keyword_overlap(text: str, keywords: list[str]) -> float:
+    """Return fraction of query keywords appearing in text."""
+    if not keywords:
+        return 0.0
+    tokens = _extract_keywords(text)
+    if not tokens:
+        return 0.0
+    hits = sum(1 for t in tokens if t in keywords)
+    return hits / len(keywords)
+
+def _domain_relevant(url: str, keywords: list[str]) -> bool:
+    """Check if any query keyword appears in the URL domain."""
+    if not url:
+        return False
+    try:
+        domain = urlparse(url).netloc.lower()
+    except Exception:
+        return False
+    tokens = re.findall(r"[a-z0-9]+", domain)
+    return any(t in keywords for t in tokens)
+
+_MIN_SNIPPET_LEN = 30
+
 def web_search(query: str) -> str:
     """Return relevant search snippets for a query using DuckDuckGo, with
-    fallback to Bing or local Ollama. Results that don't contain any of the
-    query keywords are discarded."""
+    fallback to Bing or local Ollama. Results are filtered by keyword
+    overlap, minimum length and domain relevance."""
 
     global last_used_source
     last_used_source = None
@@ -51,6 +76,7 @@ def web_search(query: str) -> str:
                 or r.find("div", class_="result__snippet")
                 or r.find("span", class_="result__snippet")
             )
+            url = title.get("href") if title else ""
             text_parts = []
             if title and title.get_text():
                 text_parts.append(title.get_text(" ", strip=True))
@@ -58,7 +84,11 @@ def web_search(query: str) -> str:
                 text_parts.append(snippet.get_text(" ", strip=True))
             if text_parts:
                 combined = " - ".join(text_parts)
-                if not keywords or _contains_keyword(combined, keywords):
+                if len(combined) < _MIN_SNIPPET_LEN:
+                    continue
+                overlap = _keyword_overlap(combined, keywords)
+                domain_ok = _domain_relevant(url, keywords)
+                if not keywords or overlap >= 0.3 or domain_ok:
                     print(f"[DuckDuckGo snippet] {combined}")
                     snippets.append(combined)
 
@@ -84,6 +114,7 @@ def web_search(query: str) -> str:
         for r in results:
             a_tag = r.find("a")
             snippet = r.find("p")
+            url = a_tag.get("href") if a_tag else ""
             text_parts = []
             if a_tag and a_tag.get_text():
                 text_parts.append(a_tag.get_text(" ", strip=True))
@@ -91,7 +122,11 @@ def web_search(query: str) -> str:
                 text_parts.append(snippet.get_text(" ", strip=True))
             if text_parts:
                 combined = " - ".join(text_parts)
-                if not keywords or _contains_keyword(combined, keywords):
+                if len(combined) < _MIN_SNIPPET_LEN:
+                    continue
+                overlap = _keyword_overlap(combined, keywords)
+                domain_ok = _domain_relevant(url, keywords)
+                if not keywords or overlap >= 0.3 or domain_ok:
                     print(f"[Bing snippet] {combined}")
                     links.append(combined)
 
