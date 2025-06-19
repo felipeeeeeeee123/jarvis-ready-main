@@ -5,6 +5,10 @@ from difflib import SequenceMatcher
 from typing import List, Optional, Dict, Any
 
 
+def _count_tokens(text: str) -> int:
+    return len(text.split())
+
+
 class KnowledgeBase:
     """Simple JSON-backed knowledge store."""
 
@@ -49,6 +53,7 @@ class KnowledgeBase:
             if existing:
                 existing["count"] = existing.get("count", 1) + 1
                 existing["timestamp"] = ts
+                existing["confidence"] = existing.get("confidence", 1.0) + 0.1
                 learned = True
                 continue
             entry = {
@@ -56,6 +61,8 @@ class KnowledgeBase:
                 "fact": fact.strip(),
                 "timestamp": ts,
                 "count": 1,
+                "tokens": _count_tokens(fact),
+                "confidence": 1.0,
             }
             if source:
                 entry["source"] = source
@@ -78,7 +85,9 @@ class KnowledgeBase:
         entry = {
             "question": question.strip(),
             "answer": answer.strip(),
-            "timestamp": ts
+            "timestamp": ts,
+            "tokens": _count_tokens(answer),
+            "confidence": 1.0,
         }
         if source:
             entry["source"] = source
@@ -99,13 +108,16 @@ class KnowledgeBase:
                 best_entry = entry
         return best_entry
 
-    def update_answer(self, question: str, new_answer: str) -> None:
+    def update_answer(self, question: str, new_answer: str, confidence: float | None = None) -> None:
         """Replace the stored answer for an existing question."""
         normalized = question.strip().lower()
         for qa in self.data.get("qa", []):
             if qa.get("question", "").strip().lower() == normalized:
                 qa["answer"] = new_answer.strip()
                 qa["timestamp"] = time.time()
+                qa["tokens"] = _count_tokens(new_answer)
+                if confidence is not None:
+                    qa["confidence"] = confidence
                 self.save()
                 break
 
@@ -122,6 +134,20 @@ class KnowledgeBase:
         ]
         if len(new_facts) != len(self.data.get("facts", [])):
             self.data["facts"] = new_facts
+            self.save()
+
+    def cleanup_low_quality(self, min_tokens: int = 3) -> None:
+        """Remove entries with too few tokens."""
+        changed = False
+        facts = [f for f in self.data.get("facts", []) if f.get("tokens", _count_tokens(f.get("fact", ""))) >= min_tokens]
+        if len(facts) != len(self.data.get("facts", [])):
+            self.data["facts"] = facts
+            changed = True
+        qa = [q for q in self.data.get("qa", []) if q.get("tokens", _count_tokens(q.get("answer", ""))) >= min_tokens]
+        if len(qa) != len(self.data.get("qa", [])):
+            self.data["qa"] = qa
+            changed = True
+        if changed:
             self.save()
 
     def deduplicate(self) -> None:
