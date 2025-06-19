@@ -1,5 +1,5 @@
 import tkinter as tk
-from utils.memory import MemoryManager
+from backend.utils.memory import MemoryManager
 
 
 def build_gui():

@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.memory import MemoryManager
+from backend.utils.memory import MemoryManager
 
 
 def show_dashboard():
