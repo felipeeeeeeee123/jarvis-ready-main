@@ -1,5 +1,7 @@
 import re
 import requests
+from collections import deque
+
 from backend.utils.memory import MemoryManager
 from backend.features.web_search import (
     web_search,
@@ -14,9 +16,12 @@ class AIBrain:
         self.model = model
         self.memory = MemoryManager()
         self.knowledge = KnowledgeBase()
+        self.history = deque(self.memory.memory.get("history", []), maxlen=5)
 
     def ask(self, prompt: str) -> str:
         self.memory.memory["last_prompt"] = prompt
+        self.history.append({"prompt": prompt, "answer": ""})
+        self.knowledge.prune()
         keywords = _extract_keywords(prompt)
         source = None
 
@@ -35,11 +40,24 @@ class AIBrain:
         except Exception:
             facts = []  # offline or search failed
 
+        stored_facts = self.knowledge.get_facts(prompt)
+        unique_facts = {}
+        for f in stored_facts:
+            unique_facts.setdefault(f["fact"], []).append(f)
+        if len(unique_facts) > 1:
+            # choose the most common fact (truth-vote)
+            majority = max(unique_facts.items(), key=lambda x: len(x[1]))[0]
+            facts.insert(0, f"[CONFLICT] Multiple facts known, majority: {majority}")
+
         similar_entry = self.knowledge.find_similar_question(prompt)
         if similar_entry:
             learned = True
 
         parts = []
+        if len(self.history) > 1:
+            for h in list(self.history)[-5:-1]:
+                if h.get("prompt") and h.get("answer"):
+                    parts.append(f"Prev Q: {h['prompt']}\nPrev A: {h['answer']}")
         if facts:
             parts.append("Web facts:\n" + "\n".join(facts))
         if similar_entry:
@@ -84,12 +102,19 @@ class AIBrain:
         self.memory.memory["last_answer"] = answer
         self.memory.memory.setdefault("knowledge", [])
         self.memory.memory["knowledge"].append({"prompt": prompt, "answer": answer})
+        if self.history:
+            self.history[-1]["answer"] = answer
+        self.memory.memory["history"] = list(self.history)
         self.memory.save()
 
         if is_valid:
             qa_source = source or "ollama"
-            if self.knowledge.add_qa(prompt, answer, source=qa_source):
+            if similar_entry and len(answer) > len(similar_entry.get("answer", "")):
+                self.knowledge.update_answer(similar_entry["question"], answer)
                 learned = True
+            else:
+                if self.knowledge.add_qa(prompt, answer, source=qa_source):
+                    learned = True
         self.knowledge.deduplicate()
 
         if learned:

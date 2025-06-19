@@ -31,7 +31,9 @@ class KnowledgeBase:
     def add_facts(self, topic: str, facts: List[str], source: str | None = None) -> bool:
         """Store new facts for a topic with timestamp.
 
-        Returns True if any new fact was added."""
+        Returns True if any new fact was added. Facts that already exist will
+        have their count increased."""
+
         ts = time.time()
         learned = False
         self.data.setdefault("facts", [])
@@ -39,12 +41,21 @@ class KnowledgeBase:
             if not fact:
                 continue
             key = (topic.strip().lower(), fact.strip().lower())
-            if any(key == (f.get("topic", "").lower(), f.get("fact", "").lower()) for f in self.data["facts"]):
+            existing = None
+            for f in self.data["facts"]:
+                if key == (f.get("topic", "").lower(), f.get("fact", "").lower()):
+                    existing = f
+                    break
+            if existing:
+                existing["count"] = existing.get("count", 1) + 1
+                existing["timestamp"] = ts
+                learned = True
                 continue
             entry = {
                 "topic": topic,
                 "fact": fact.strip(),
-                "timestamp": ts
+                "timestamp": ts,
+                "count": 1,
             }
             if source:
                 entry["source"] = source
@@ -87,6 +98,31 @@ class KnowledgeBase:
                 best_score = score
                 best_entry = entry
         return best_entry
+
+    def update_answer(self, question: str, new_answer: str) -> None:
+        """Replace the stored answer for an existing question."""
+        normalized = question.strip().lower()
+        for qa in self.data.get("qa", []):
+            if qa.get("question", "").strip().lower() == normalized:
+                qa["answer"] = new_answer.strip()
+                qa["timestamp"] = time.time()
+                self.save()
+                break
+
+    def get_facts(self, topic: str) -> List[Dict[str, Any]]:
+        """Return all facts stored for a topic."""
+        return [f for f in self.data.get("facts", []) if f.get("topic", "").lower() == topic.strip().lower()]
+
+    def prune(self, max_age_days: int = 30, min_count: int = 1) -> None:
+        """Remove facts older than `max_age_days` with low count."""
+        cutoff = time.time() - max_age_days * 86400
+        new_facts = [
+            f for f in self.data.get("facts", [])
+            if f.get("timestamp", 0) >= cutoff or f.get("count", 1) > min_count
+        ]
+        if len(new_facts) != len(self.data.get("facts", [])):
+            self.data["facts"] = new_facts
+            self.save()
 
     def deduplicate(self) -> None:
         """Remove duplicate facts and questions."""
