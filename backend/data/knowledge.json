@@ -69,6 +69,70 @@
             "topic": "",
             "fact": "[Web search failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=10)]",
             "timestamp": 1750306365.7914271
+        },
+        {
+            "topic": "whos the president of mexico",
+            "fact": "merriam-webster.com https:// www.merriam-webster.com \u203a grammar \u203a whos - whos e... - Who\u2019s is a contraction of who is or who has. It can be found at the beginning of a question: Who\u2019s [=who is] at the door? Who\u2019s [=who has] got the remote? as well as with who functioning as a \u2026",
+            "timestamp": 1750307893.1110363,
+            "count": 1,
+            "tokens": 52,
+            "confidence": 1.0
+        },
+        {
+            "topic": "whos the president of mexico",
+            "fact": "thesaurus.com https://www.thesaurus.com \u203a grammar \u203a whos e-vs- whos - Nov 10, 2017 \u00b7 Whose is the possessive form of the pronoun who, while who\u2019s is a contraction of the words who is or who has. However, many people still find whose and who\u2019s particularly \u2026",
+            "timestamp": 1750307893.1110363,
+            "count": 1,
+            "tokens": 45,
+            "confidence": 1.0
+        },
+        {
+            "topic": "whos the president of mexico",
+            "fact": "grammarly.com https:// www.grammarly.com \u203a ... \u203a whos - whos e - Feb 21, 2025 \u00b7 Whose is the possessive form of who, while who\u2019s is a contraction for who is or who has\u2014both are homophones but have different meanings. Whose is used to indicate \u2026",
+            "timestamp": 1750307893.1110363,
+            "count": 1,
+            "tokens": 45,
+            "confidence": 1.0
+        },
+        {
+            "topic": "When did Claudia Sheinbaum become president of Mexico?",
+            "fact": "On June 7, 2018, Claudia Sheinbaum was officially chosen as the candidate for Morena (Movimiento Regeneraci\u00f3n Nacional) party for the election of the Chief of Government of Mexico City. In October 2018, she won the election with over 53% of the vote and took office on December 1, 2018.",
+            "timestamp": 1750308070.1481385,
+            "count": 1,
+            "tokens": 49,
+            "confidence": 1.0
+        },
+        {
+            "topic": "When did Claudia Sheinbaum become president of Mexico?",
+            "fact": "It is important to note that the role of President and Chief of Government are different positions in the Mexican government. The President leads the federal government and serves as the head of state, while the Chief of Government (or Mayor) heads the local government of Mexico City.",
+            "timestamp": 1750308070.1481385,
+            "count": 1,
+            "tokens": 48,
+            "confidence": 1.0
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Israel launch strikes on Iran in 2025?",
+            "fact": "Israel and Iran have had a complex and often contentious relationship for many decades. This tension is rooted in their political ideologies, regional ambitions, and religious differences. Iran supports several militant groups that Israel views as threats to its security, such as Hezbollah and Hamas. Conversely, Israel has been accused of carrying out covert operations against Iran's nuclear program.",
+            "timestamp": 1750308186.762823,
+            "count": 1,
+            "tokens": 59,
+            "confidence": 1.0
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Israel launch strikes on Iran in 2025?",
+            "fact": "Regarding your question about whether Israel launched strikes on Iran in 2025, I cannot provide a definitive answer because the scenario you described is hypothetical. It is important to note that both nations have previously engaged in clandestine military activities targeting each other's interests. For example, in 2010, an alleged Israeli airstrike destroyed a suspected nuclear facility in Iran, although neither Israel nor Iran officially confirmed the incident.",
+            "timestamp": 1750308186.762823,
+            "count": 1,
+            "tokens": 68,
+            "confidence": 1.0
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Israel launch strikes on Iran in 2025?",
+            "fact": "Given the ongoing tensions between Israel and Iran, it is possible that future strikes could occur; however, such events would depend on various factors, including regional politics, the state of Iran's nuclear program, and the international community's response to any perceived threats posed by Iran. It is essential to monitor developments in the Middle East closely to understand the potential implications of these geopolitical dynamics.",
+            "timestamp": 1750308186.762823,
+            "count": 1,
+            "tokens": 65,
+            "confidence": 1.0
         }
     ],
     "qa": [
@@ -79,8 +143,9 @@
         },
         {
             "question": "Who is the president of Mexico?",
-            "answer": "The President of Mexico as of the current context is Claudia Sheinbaum Pardo. She became the President on June 1, 2024, making her the first woman to hold this position in Mexico's more than 200 years of independence. The information provided comes from multiple reputable sources like Wikipedia, PBS News Hour, and Associated Press.",
-            "timestamp": 1750305466.4224
+            "answer": "The correct response is: \"Who is the President of Mexico?\"\nThe answer would be: As of the current context, the President of Mexico is Claudia Sheinbaum Pardo. She became the President on June 1, 2024, making her the first woman to hold this position in Mexico's more than 200 years of independence. The information provided comes from multiple reputable sources like Wikipedia, PBS News Hour, and Associated Press.\nThe contraction \"who's\" means \"who is\" or \"who has\". So in your question \"whos the president of mexico\", it should be corrected to \"Who is the President of Mexico?\" or \"Who\u2019s the President of Mexico?\" (using the correct contraction).",
+            "timestamp": 1750307902.3812695,
+            "tokens": 107
         },
         {
             "question": "",
@@ -96,6 +161,30 @@
             "question": "\ud83e\udde0 You: Did Iran and Israel go to war in 2024 or 2025?",
             "answer": "Based on the provided links, there is no information regarding a potential conflict between Iran and Israel in the years 2024 or 2025. The articles you've shared pertain to Backstage (a software development platform), Ebay (an online marketplace) and Dissociative Identity Disorder (DID), which is a psychological condition, not international conflicts. To find information about possible future conflicts between Iran and Israel, I would recommend checking reliable news sources or reputable political analysis websites.",
             "timestamp": 1750306353.356649
+        },
+        {
+            "question": "When did Claudia Sheinbaum become president of Mexico?",
+            "answer": "Claudia Sheinbaum became President of Mexico on June 1, 2024. Prior to that, she served as the Chief of Government (or Mayor) of Mexico City from December 1, 2018, after winning an election with over 53% of the vote in October 2018. The role of President and Chief of Government are different positions in the Mexican government, with the President leading the federal government and serving as the head of state, while the Chief of Government heads the local government of Mexico City.",
+            "timestamp": 1750308075.2377422,
+            "tokens": 83,
+            "confidence": 1.0,
+            "source": "ollama"
+        },
+        {
+            "question": "What\u2019s going on between Israel and Iran in 2025?",
+            "answer": "To provide an accurate answer, it is important to clarify that I am a model designed to generate responses based on the information provided and current events up until 2024. As of my current programming, I don't have predictions or speculations about future events after this year, such as conflicts between Israel and Iran in 2025.\n\nHowever, I can share some background information about the long-standing tension between Israel and Iran to help you understand the context:\n\nIsrael and Iran have had a contentious relationship for decades, with disagreements rooted in religious, political, and ideological differences. Iran is a leading state sponsor of terrorism, according to the U.S. State Department, and has been heavily involved in conflicts throughout the Middle East, including Syria and Iraq. Israel views Iran's nuclear program as a major threat and has expressed concerns about the potential military capabilities that could result from this program.\n\nTensions between the two countries have escalated over the years, with both sides engaging in various forms of proxy wars and indirect confrontations. In recent years, there have been several incidents involving Iranian-backed militias targeting Israeli interests, as well as Israel's retaliatory strikes against these groups.\n\nIn 2025, the situation between Israel and Iran is likely to remain tense due to ongoing disagreements over regional power dynamics, nuclear ambitions, and proxy wars in neighboring countries. It is essential to monitor official communications from both governments, as well as developments in the Middle East, for any significant changes or escalations in the conflict.\n\nFor more detailed information on this topic, I recommend consulting reliable news sources such as The New York Times, BBC News, and Al Jazeera English.",
+            "timestamp": 1750308137.071694,
+            "tokens": 276,
+            "confidence": 1.0,
+            "source": "ollama"
+        },
+        {
+            "question": "\ud83e\udde0 You: Did Israel launch strikes on Iran in 2025?",
+            "answer": "I cannot definitively answer whether Israel launched strikes on Iran in 2025, as that scenario is hypothetical and my programming does not include predictions or speculations about future events. However, it's essential to note that both nations have previously engaged in clandestine military activities targeting each other's interests, such as the alleged Israeli airstrike on a suspected nuclear facility in Iran in 2010. The relationship between these two countries remains complex and could potentially involve further military escalations if tensions continue to rise.",
+            "timestamp": 1750308192.3006964,
+            "tokens": 83,
+            "confidence": 1.0,
+            "source": "ollama"
         }
     ]
 }
