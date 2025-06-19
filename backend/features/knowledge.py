@@ -28,29 +28,46 @@ class KnowledgeBase:
         with open(self.path, 'w') as f:
             json.dump(self.data, f, indent=4)
 
-    def add_facts(self, topic: str, facts: List[str]) -> None:
-        """Store new facts for a topic with timestamp."""
+    def add_facts(self, topic: str, facts: List[str]) -> bool:
+        """Store new facts for a topic with timestamp.
+
+        Returns True if any new fact was added."""
         ts = time.time()
+        learned = False
+        self.data.setdefault("facts", [])
         for fact in facts:
             if not fact:
                 continue
-            self.data.setdefault("facts", [])
+            key = (topic.strip().lower(), fact.strip().lower())
+            if any(key == (f.get("topic", "").lower(), f.get("fact", "").lower()) for f in self.data["facts"]):
+                continue
             self.data["facts"].append({
                 "topic": topic,
                 "fact": fact.strip(),
                 "timestamp": ts
             })
-        self.save()
+            learned = True
+        if learned:
+            self.save()
+        return learned
 
-    def add_qa(self, question: str, answer: str) -> None:
+    def add_qa(self, question: str, answer: str) -> bool:
+        """Store a new question/answer pair.
+
+        Returns True if it was a new entry."""
         ts = time.time()
         self.data.setdefault("qa", [])
+        normalized = question.strip().lower()
+        for qa in self.data["qa"]:
+            if qa.get("question", "").strip().lower() == normalized:
+                return False
         self.data["qa"].append({
             "question": question.strip(),
             "answer": answer.strip(),
             "timestamp": ts
         })
         self.save()
+        return True
 
     def find_similar_question(self, question: str, threshold: float = 0.6) -> Optional[Dict[str, str]]:
         """Return the most similar past QA pair if above threshold."""
