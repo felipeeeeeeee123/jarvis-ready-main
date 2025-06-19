@@ -16,7 +16,11 @@ def main():
     online_mode = True  # Set to False to disable web search
 
     while True:
-        prompt = input("🧠 You: ").strip()
+        try:
+            prompt = input("🧠 You: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\n👋 JARVIS shutting down.")
+            break
         if prompt.lower() == "exit":
             print("👋 JARVIS shutting down.")
             break

@@ -1,0 +1,26 @@
+{
+    "facts": [
+        {
+            "topic": "What is Python?",
+            "fact": "wikipedia.orghttps://en.wikipedia.org \u203a wiki \u203a Python_(programming_language)",
+            "timestamp": 1750304799.3912337
+        },
+        {
+            "topic": "What is Python?",
+            "fact": "geeksforgeeks.orghttps://www.geeksforgeeks.org \u203a what-is-python",
+            "timestamp": 1750304799.3912337
+        },
+        {
+            "topic": "What is Python?",
+            "fact": "w3schools.comhttps://www.w3schools.com \u203a python \u203a python_intro.asp",
+            "timestamp": 1750304799.3912337
+        }
+    ],
+    "qa": [
+        {
+            "question": "What is Python?",
+            "answer": "wikipedia.orghttps://en.wikipedia.org \u203a wiki \u203a Python_(programming_language)\ngeeksforgeeks.orghttps://www.geeksforgeeks.org \u203a what-is-python\nw3schools.comhttps://www.w3schools.com \u203a python \u203a python_intro.asp",
+            "timestamp": 1750304799.3935645
+        }
+    ]
+}

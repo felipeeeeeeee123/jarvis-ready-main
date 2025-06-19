@@ -1,29 +1,41 @@
 import requests
 from backend.utils.memory import MemoryManager
 from backend.features.web_search import web_search
+from backend.features.knowledge import KnowledgeBase
 
 class AIBrain:
     def __init__(self, model="mistral"):
         self.model = model
         self.memory = MemoryManager()
+        self.knowledge = KnowledgeBase()
 
     def ask(self, prompt: str) -> str:
         self.memory.memory["last_prompt"] = prompt
 
-        # 🔍 Check if prompt already answered (exact match)
-        for entry in self.memory.memory.get("knowledge", []):
-            if prompt.lower().strip() == entry["prompt"].lower().strip():
-                return f"[Learned Memory] {entry['answer']}"
+        facts: list[str] = []
+        learned = False
+        try:
+            search_text = web_search(prompt)
+            facts = [line.strip() for line in search_text.splitlines() if line.strip()][:3]
+            if facts:
+                if self.knowledge.add_facts(prompt, facts):
+                    learned = True
+        except Exception:
+            facts = []  # offline or search failed
+
+        similar_entry = self.knowledge.find_similar_question(prompt)
+        if similar_entry:
+            learned = True
+
+        parts = []
+        if facts:
+            parts.append("Web facts:\n" + "\n".join(facts))
+        if similar_entry:
+            parts.append("Past answer:\n" + similar_entry["answer"])
+        parts.append(f"User asked: {prompt}")
+        enriched_prompt = "\n\n".join(parts)
 
         try:
-            # 🕸️ Get real-time web context
-            try:
-                web_info = web_search(prompt)
-                enriched_prompt = f"Web facts:\n{web_info}\n\nUser asked: {prompt}"
-            except Exception:
-                enriched_prompt = prompt  # If web fails, go without
-
-            # 🧠 Local model generation (Ollama)
             response = requests.post(
                 "http://localhost:11434/api/generate",
                 json={
@@ -33,22 +45,28 @@ class AIBrain:
                 },
                 timeout=10
             )
-            data = response.json()
-            answer = data.get("response", "").strip()
+            answer = response.json().get("response", "").strip()
             if not answer:
                 raise ValueError("Ollama returned empty response.")
-
         except Exception:
-            # 🌐 Final fallback to web if Ollama fails
-            answer = f"[Fallback: Web] {web_search(prompt)}"
+            if similar_entry:
+                answer = similar_entry["answer"]
+            elif facts:
+                answer = "\n".join(facts)
+            else:
+                answer = "[No answer available]"
 
-        # 💾 Save answer to memory
+        # Persist answer
         self.memory.memory["last_answer"] = answer
         self.memory.memory.setdefault("knowledge", [])
-        self.memory.memory["knowledge"].append({
-            "prompt": prompt,
-            "answer": answer
-        })
+        self.memory.memory["knowledge"].append({"prompt": prompt, "answer": answer})
         self.memory.save()
+
+        if self.knowledge.add_qa(prompt, answer):
+            learned = True
+        self.knowledge.deduplicate()
+
+        if learned:
+            answer += "\n[Learned Memory]"
 
         return answer
