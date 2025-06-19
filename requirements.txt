@@ -1,0 +1,8 @@
+openai
+requests
+beautifulsoup4
+alpaca-trade-api
+streamlit
+flask
+python-dotenv
+pandas
