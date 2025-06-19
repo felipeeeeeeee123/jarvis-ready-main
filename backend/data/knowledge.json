@@ -49,6 +49,26 @@
             "topic": "Did Iran and Israel go to war in 2024 or 2025?",
             "fact": "psychologytoday.com https:// www.psychologytoday.com \u203a us \u203a conditions \u203a dissociative... - Sep 21, 2021 \u00b7 Dissociative identity disorder (DID) is a rare condition in which two or more distinct identities, or personality states, are present in\u2014and alternately take control of\u2014an individual. \u2026",
             "timestamp": 1750305512.1826904
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "github.com https://github.com \u203a shano \u203a awesome- backstage - A curated list of awesome Backstage resources, plugins, tech docs, and more! Backstage is an open-source platform that helps developers build, test, and maintain software with ease. This \u2026",
+            "timestamp": 1750306345.787316
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "backstage.io https:// backstage .io \u203a docs \u203a tooling \u203a cli \u203a commands - Usage: backstage-cli repo test [options] Run tests, forwarding args to Jest, defaulting to watch mode Options:--since <ref> Only test packages that changed since the specified ref- \u2026",
+            "timestamp": 1750306345.787316
+        },
+        {
+            "topic": "\ud83e\udde0 You: Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "ebay.ca https://www.cafr.ebay.ca \u203a sch \u203a i.html - Visitez eBay pour une grande s\u00e9lection de Test Query for Encyclopedia Backstage. Achetez en toute s\u00e9curit\u00e9 et au meilleur prix sur eBay, la livraison est rapide.",
+            "timestamp": 1750306345.787316
+        },
+        {
+            "topic": "",
+            "fact": "[Web search failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=10)]",
+            "timestamp": 1750306365.7914271
         }
     ],
     "qa": [
@@ -71,6 +91,11 @@
             "question": "Did Iran and Israel go to war in 2024 or 2025?",
             "answer": "Based on the provided links, there is no information regarding a potential conflict between Iran and Israel in the years 2024 or 2025. The articles you've shared pertain to Dissociative Identity Disorder (DID), which is a psychological condition, not international conflicts.",
             "timestamp": 1750305516.0246017
+        },
+        {
+            "question": "\ud83e\udde0 You: Did Iran and Israel go to war in 2024 or 2025?",
+            "answer": "Based on the provided links, there is no information regarding a potential conflict between Iran and Israel in the years 2024 or 2025. The articles you've shared pertain to Backstage (a software development platform), Ebay (an online marketplace) and Dissociative Identity Disorder (DID), which is a psychological condition, not international conflicts. To find information about possible future conflicts between Iran and Israel, I would recommend checking reliable news sources or reputable political analysis websites.",
+            "timestamp": 1750306353.356649
         }
     ]
 }
