@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 from alpaca_trade_api import REST, TimeFrame
 
-from utils.memory import MemoryManager
+from backend.utils.memory import MemoryManager
 from .telegram_alerts import send_telegram_alert
 from .strategies import rsi_strategy, ema_strategy, macd_strategy
 
