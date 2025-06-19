@@ -22,6 +22,7 @@ class AIBrain:
         self.memory.memory["last_prompt"] = prompt
         self.history.append({"prompt": prompt, "answer": ""})
         self.knowledge.prune()
+        self.knowledge.cleanup_low_quality()
         keywords = _extract_keywords(prompt)
         source = None
 
@@ -45,8 +46,13 @@ class AIBrain:
         for f in stored_facts:
             unique_facts.setdefault(f["fact"], []).append(f)
         if len(unique_facts) > 1:
-            # choose the most common fact (truth-vote)
-            majority = max(unique_facts.items(), key=lambda x: len(x[1]))[0]
+            majority = max(
+                unique_facts.items(),
+                key=lambda x: (
+                    sum(e.get("confidence", 1.0) for e in x[1]),
+                    len(x[1]),
+                ),
+            )[0]
             facts.insert(0, f"[CONFLICT] Multiple facts known, majority: {majority}")
 
         similar_entry = self.knowledge.find_similar_question(prompt)
@@ -85,6 +91,23 @@ class AIBrain:
                 answer = "\n".join(facts)
             else:
                 answer = "[No answer available]"
+
+        if answer == "[No answer available]":
+            try:
+                res = requests.post(
+                    "http://localhost:11434/api/generate",
+                    json={
+                        "model": self.model,
+                        "prompt": f"Summarize the topic: {prompt}",
+                        "stream": False,
+                    },
+                    timeout=10,
+                )
+                summary = res.json().get("response", "").strip()
+                if summary:
+                    answer = f"[Ollama summary] {summary}"
+            except Exception:
+                pass
 
         # Determine if the answer is valid and on-topic
         invalid_markers = [
