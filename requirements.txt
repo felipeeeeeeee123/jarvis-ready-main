@@ -1,8 +1,16 @@
-openai
+# Core dependencies
 requests
 beautifulsoup4
-alpaca-trade-api
-streamlit
 flask
+streamlit
 python-dotenv
 pandas
+
+# Alpaca trading
+alpaca-trade-api
+
+# Optional (useful for future upgrades)
+openai  # Only if you want to use OpenAI when re-enabled
+
+# For compatibility
+typing-extensions
