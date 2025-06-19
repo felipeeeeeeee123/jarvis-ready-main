@@ -18,12 +18,16 @@
         {
             "topic": "Who is the president of Mexico?",
             "fact": "wikipedia.org https:// en.wikipedia.org \u203a wiki \u203a Claudia_Sheinbaum - Claudia Sheinbaum Pardo [a] (born 24 June 1962) is a Mexican politician, energy and climate change scientist, and academic who has served as the 66th president of Mexico since 2024. \u2026",
-            "timestamp": 1750305459.3893104
+            "timestamp": 1750322210.921376,
+            "count": 2,
+            "confidence": 1.1
         },
         {
             "topic": "Who is the president of Mexico?",
             "fact": "pbs.org https:// www.pbs.org \u203a newshour \u203a world \u203a who-is-claudia... - Jun 3, 2024 \u00b7 MEXICO CITY (AP) \u2014 Claudia Sheinbaum, who will be Mexico\u2019s first woman leader in the nation\u2019s more than 200 years of independence, captured the presidency by promising \u2026",
-            "timestamp": 1750305459.3893104
+            "timestamp": 1750322210.921376,
+            "count": 2,
+            "confidence": 1.1
         },
         {
             "topic": "Who is the president of Mexico?",
@@ -133,6 +137,46 @@
             "count": 1,
             "tokens": 65,
             "confidence": 1.0
+        },
+        {
+            "topic": "What happened in Gaza today?",
+            "fact": "preply.com https://preply.com \u203a en \u203a question \u203a happened-or-happend - Happened is past tense ie- The storm had happened a week before the playoffs. Regards, Vitor Rabbit. The ...",
+            "timestamp": 1750322190.5997074,
+            "count": 1,
+            "tokens": 28,
+            "confidence": 1.0
+        },
+        {
+            "topic": "Who is the President of Mexico?",
+            "fact": "npr.org https:// www.npr.org \u203a mexico -has-a-new- president -and-its-first... - Oct 1, 2024 \u00b7 MEXICO CITY \u2014 Claudia Sheinbaum, an environmental scientist and former mayor of Mexico City, takes office on Tuesday as Mexico\u2019s 66th president and its first female leader.",
+            "timestamp": 1750322210.921376,
+            "count": 1,
+            "tokens": 40,
+            "confidence": 1.0
+        },
+        {
+            "topic": "What stock should I trade today?",
+            "fact": "marketwatch.com https://www.marketwatch.com - MarketWatch provides the latest stock market, financial and business news. Get stock market quotes, personal finance advice, company news and more.",
+            "timestamp": 1750322231.3347578,
+            "count": 1,
+            "tokens": 24,
+            "confidence": 1.0
+        },
+        {
+            "topic": "What stock should I trade today?",
+            "fact": "cnn.com https://www.cnn.com \u203a markets - Up-to-date stock market data coverage from CNN. Get the latest updates on US markets, world markets, stock quotes, crypto, commodities and currencies.-----",
+            "timestamp": 1750322231.3347578,
+            "count": 1,
+            "tokens": 27,
+            "confidence": 1.0
+        },
+        {
+            "topic": "What stock should I trade today?",
+            "fact": "nasdaq.com https://www.nasdaq.com \u203a market-activity \u203a stocks - Find stock quotes, interactive charts, historical information, company news and stock analysis on all public companies from Nasdaq.",
+            "timestamp": 1750322231.3347578,
+            "count": 1,
+            "tokens": 25,
+            "confidence": 1.0
         }
     ],
     "qa": [
@@ -183,6 +227,14 @@
             "answer": "I cannot definitively answer whether Israel launched strikes on Iran in 2025, as that scenario is hypothetical and my programming does not include predictions or speculations about future events. However, it's essential to note that both nations have previously engaged in clandestine military activities targeting each other's interests, such as the alleged Israeli airstrike on a suspected nuclear facility in Iran in 2010. The relationship between these two countries remains complex and could potentially involve further military escalations if tensions continue to rise.",
             "timestamp": 1750308192.3006964,
             "tokens": 83,
+            "confidence": 1.0,
+            "source": "ollama"
+        },
+        {
+            "question": "What happened in Gaza today?",
+            "answer": "To provide a response to this question, it's essential to note that I am designed to generate general responses based on current events and information available up until 2024. As of my current programming, I don't provide financial advice or make investment recommendations.\n\nHowever, to help you understand the stock market better, here is some background information:\n\nStock markets are exchanges where shares of publicly-traded companies are bought and sold. The stock prices fluctuate based on various factors such as company earnings, economic indicators, political events, and investor sentiment.\n\nTo make informed investment decisions, it's crucial to research individual stocks, analyze their performance over time, and stay updated on the latest news and developments related to them. Some popular stock market platforms include Robinhood, E*TRADE, and TD Ameritrade.\n\nIf you are new to investing or interested in learning more about trading stocks, I recommend consulting reputable financial resources like MarketWatch, CNN Money, and Nasdaq. These websites provide up-to-date stock market data, company news, and investment advice from experts.\n\nAdditionally, it's important to remember that investing always carries risk, and past performance is not a guarantee of future results. It's essential to diversify your portfolio and consider your financial goals, risk tolerance, and time horizon when making investment decisions.\n\nIn summary, while I cannot provide specific investment advice or recommendations on which stock to trade today, I hope this background information helps you better understand the stock market and encourages you to do thorough research before making any investment decisions. Always consult a financial advisor for personalized guidance tailored to your unique circumstances.",
+            "timestamp": 1750322242.047275,
+            "tokens": 262,
             "confidence": 1.0,
             "source": "ollama"
         }
