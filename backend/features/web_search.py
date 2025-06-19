@@ -43,6 +43,18 @@ def _domain_relevant(url: str, keywords: list[str]) -> bool:
     tokens = re.findall(r"[a-z0-9]+", domain)
     return any(t in keywords for t in tokens)
 
+def _domain_score(url: str) -> float:
+    """Return extra weight for reputable domains."""
+    if not url:
+        return 0.0
+    try:
+        domain = urlparse(url).netloc.lower()
+    except Exception:
+        return 0.0
+    if domain.endswith(".gov") or domain.endswith(".edu") or domain.endswith(".org"):
+        return 0.3
+    return 0.0
+
 _MIN_SNIPPET_LEN = 30
 
 def web_search(query: str) -> str:
@@ -67,7 +79,7 @@ def web_search(query: str) -> str:
         res.raise_for_status()
         soup = BeautifulSoup(res.text, "html.parser")
         results = soup.find_all("div", class_="result", limit=5)
-        snippets: list[str] = []
+        snippets: list[tuple[float, str]] = []
 
         for r in results:
             title = r.find("a", class_="result__a")
@@ -89,12 +101,14 @@ def web_search(query: str) -> str:
                 overlap = _keyword_overlap(combined, keywords)
                 domain_ok = _domain_relevant(url, keywords)
                 if not keywords or overlap >= 0.3 or domain_ok:
+                    score = overlap + _domain_score(url)
                     print(f"[DuckDuckGo snippet] {combined}")
-                    snippets.append(combined)
+                    snippets.append((score, combined))
 
         if snippets:
+            snippets.sort(key=lambda x: x[0], reverse=True)
             last_used_source = "duckduckgo"
-            return "\n".join(snippets[:3])
+            return "\n".join([s for _, s in snippets[:3]])
 
     except Exception as e:
         print(f"[DuckDuckGo Error] {e}")
@@ -109,7 +123,7 @@ def web_search(query: str) -> str:
         res.raise_for_status()
         soup = BeautifulSoup(res.text, "html.parser")
         results = soup.find_all("li", class_="b_algo", limit=5)
-        links: list[str] = []
+        links: list[tuple[float, str]] = []
 
         for r in results:
             a_tag = r.find("a")
@@ -127,12 +141,14 @@ def web_search(query: str) -> str:
                 overlap = _keyword_overlap(combined, keywords)
                 domain_ok = _domain_relevant(url, keywords)
                 if not keywords or overlap >= 0.3 or domain_ok:
+                    score = overlap + _domain_score(url)
                     print(f"[Bing snippet] {combined}")
-                    links.append(combined)
+                    links.append((score, combined))
 
         if links:
+            links.sort(key=lambda x: x[0], reverse=True)
             last_used_source = "bing"
-            return "\n".join(links[:3])
+            return "\n".join([s for _, s in links[:3]])
 
     except Exception as e:
         print(f"[Bing Error] {e}")
@@ -143,7 +159,7 @@ def web_search(query: str) -> str:
             "http://localhost:11434/api/generate",
             json={
                 "model": "mistral",
-                "prompt": query,
+                "prompt": f"Explain this in detail: {query}",
                 "stream": False
             },
             timeout=10
