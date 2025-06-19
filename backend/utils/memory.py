@@ -4,7 +4,9 @@ import time
 import os
 
 class MemoryManager:
-    def __init__(self, path='data/memory.json'):
+    def __init__(self, path=None):
+        if path is None:
+            path = os.path.join(os.path.dirname(__file__), '..', 'data', 'memory.json')
         self.path = path
         self.memory = {}
         self.load()

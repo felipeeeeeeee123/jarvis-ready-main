@@ -1,5 +1,13 @@
+from dotenv import load_dotenv
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
 from flask import Flask, request, jsonify
-from features.autotrade import run_autotrader
+from backend.features.autotrade import run_autotrader
+
+load_dotenv()
 
 app = Flask(__name__)
 

@@ -1,9 +1,19 @@
 import json
+import os
+import sys
 from pathlib import Path
-from utils.memory import MemoryManager
+from dotenv import load_dotenv
+
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+
+from backend.utils.memory import MemoryManager
+
+load_dotenv()
 
 
-def generate_report(path: str = "data/memory.json") -> str:
+DEFAULT_PATH = os.path.join(os.path.dirname(__file__), 'data', 'memory.json')
+
+def generate_report(path: str = DEFAULT_PATH) -> str:
     if not Path(path).exists():
         return "No trade data."
     mem = MemoryManager(path)
