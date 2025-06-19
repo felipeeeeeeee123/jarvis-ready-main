@@ -12,19 +12,20 @@ class AIBrain:
     def ask(self, prompt: str) -> str:
         self.memory.memory["last_prompt"] = prompt
 
-        # Always attempt a web search for new facts
         facts: list[str] = []
+        learned = False
         try:
             search_text = web_search(prompt)
             facts = [line.strip() for line in search_text.splitlines() if line.strip()][:3]
             if facts:
-                self.knowledge.add_facts(prompt, facts)
+                if self.knowledge.add_facts(prompt, facts):
+                    learned = True
         except Exception:
-            # offline or search failed
-            facts = []
+            facts = []  # offline or search failed
 
-        # Check for similar past question
         similar_entry = self.knowledge.find_similar_question(prompt)
+        if similar_entry:
+            learned = True
 
         parts = []
         if facts:
@@ -61,7 +62,11 @@ class AIBrain:
         self.memory.memory["knowledge"].append({"prompt": prompt, "answer": answer})
         self.memory.save()
 
-        self.knowledge.add_qa(prompt, answer)
+        if self.knowledge.add_qa(prompt, answer):
+            learned = True
         self.knowledge.deduplicate()
+
+        if learned:
+            answer += "\n[Learned Memory]"
 
         return answer
