@@ -14,6 +14,41 @@
             "topic": "What is Python?",
             "fact": "w3schools.comhttps://www.w3schools.com \u203a python \u203a python_intro.asp",
             "timestamp": 1750304799.3912337
+        },
+        {
+            "topic": "Who is the president of Mexico?",
+            "fact": "wikipedia.org https:// en.wikipedia.org \u203a wiki \u203a Claudia_Sheinbaum - Claudia Sheinbaum Pardo [a] (born 24 June 1962) is a Mexican politician, energy and climate change scientist, and academic who has served as the 66th president of Mexico since 2024. \u2026",
+            "timestamp": 1750305459.3893104
+        },
+        {
+            "topic": "Who is the president of Mexico?",
+            "fact": "pbs.org https:// www.pbs.org \u203a newshour \u203a world \u203a who-is-claudia... - Jun 3, 2024 \u00b7 MEXICO CITY (AP) \u2014 Claudia Sheinbaum, who will be Mexico\u2019s first woman leader in the nation\u2019s more than 200 years of independence, captured the presidency by promising \u2026",
+            "timestamp": 1750305459.3893104
+        },
+        {
+            "topic": "Who is the president of Mexico?",
+            "fact": "apnews.com https://apnews.com \u203a article - MEXICO CITY (AP) \u2014 Claudia Sheinbaum, who will be Mexico\u2019s first woman leader in the nation\u2019s more than 200 years of independence, captured the presidency by promising \u2026",
+            "timestamp": 1750305459.3893104
+        },
+        {
+            "topic": "",
+            "fact": "[Web search error: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=10)]",
+            "timestamp": 1750305478.935109
+        },
+        {
+            "topic": "Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "wikipedia.org https://en.m. wikipedia.org \u203a wiki \u203a Dissociative_identity_disorder - Dissociative identity disorder (DID), previously known as multiple personality disorder (MPD), is characterized by the presence of at least two personality states or \"alters\". The diagnosis is \u2026",
+            "timestamp": 1750305512.1826904
+        },
+        {
+            "topic": "Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "clevelandclinic.org https:// my.clevelandclinic.org \u203a health \u203a diseases - DID is a way for you to distance or detach yourself from the trauma. DID symptoms may trigger (happen suddenly) after: Removing yourself from a stressful or traumatic environment (like \u2026",
+            "timestamp": 1750305512.1826904
+        },
+        {
+            "topic": "Did Iran and Israel go to war in 2024 or 2025?",
+            "fact": "psychologytoday.com https:// www.psychologytoday.com \u203a us \u203a conditions \u203a dissociative... - Sep 21, 2021 \u00b7 Dissociative identity disorder (DID) is a rare condition in which two or more distinct identities, or personality states, are present in\u2014and alternately take control of\u2014an individual. \u2026",
+            "timestamp": 1750305512.1826904
         }
     ],
     "qa": [
@@ -21,6 +56,21 @@
             "question": "What is Python?",
             "answer": "wikipedia.orghttps://en.wikipedia.org \u203a wiki \u203a Python_(programming_language)\ngeeksforgeeks.orghttps://www.geeksforgeeks.org \u203a what-is-python\nw3schools.comhttps://www.w3schools.com \u203a python \u203a python_intro.asp",
             "timestamp": 1750304799.3935645
+        },
+        {
+            "question": "Who is the president of Mexico?",
+            "answer": "The President of Mexico as of the current context is Claudia Sheinbaum Pardo. She became the President on June 1, 2024, making her the first woman to hold this position in Mexico's more than 200 years of independence. The information provided comes from multiple reputable sources like Wikipedia, PBS News Hour, and Associated Press.",
+            "timestamp": 1750305466.4224
+        },
+        {
+            "question": "",
+            "answer": "It seems like you're encountering a network or connection issue, specifically a read timeout when trying to access 'localhost' on port 11434. This error typically occurs when the client is unable to establish a connection with the server within the specified timeframe (10 seconds in this case).\n\nHere are some steps you can take to troubleshoot this issue:\n\n1. Check if the application or service running on port 11434 is up and running by visiting http://localhost:11434 in your web browser. If it's a command-line tool, try running it from the terminal or command prompt.\n\n2. Verify that the firewall or security software installed on your system isn't blocking the connection to the server. You may need to temporarily disable or adjust the settings of the firewall or security software if this is causing the issue.\n\n3. If you're running multiple applications or services, ensure that none of them are using port 11434. Confirm the ports in use by each application and try changing the port for your problematic service to a different available one.\n\n4. Check if there is any network configuration or connectivity issue that could be causing the problem. Test the network connection and ensure that it's stable.\n\n5. Restart your computer or router and see if that resolves the read timeout error.\n\nIf you've tried all these steps and are still encountering the same issue, it might be a good idea to consult the documentation for the application or service running on port 11434 for more specific guidance on troubleshooting network errors.",
+            "timestamp": 1750305488.7135293
+        },
+        {
+            "question": "Did Iran and Israel go to war in 2024 or 2025?",
+            "answer": "Based on the provided links, there is no information regarding a potential conflict between Iran and Israel in the years 2024 or 2025. The articles you've shared pertain to Dissociative Identity Disorder (DID), which is a psychological condition, not international conflicts.",
+            "timestamp": 1750305516.0246017
         }
     ]
 }
